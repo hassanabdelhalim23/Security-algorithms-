@@ -1,0 +1,149 @@
+<!doctype html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="ThemeFuse">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Information Engineering Project</title>
+
+<script src="static/js/libs/modernizr.min.js"></script>
+<script src="static/js/libs/jquery-1.10.2.min.js"></script>
+<script src="static/js/libs/jquery-ui.min.js"></script>
+<script src="static/js/libs/bootstrap.min.js"></script>
+
+<link href="static/css/bootstrap.css" media="screen" rel="stylesheet">
+<link href="static/style.css" media="screen" rel="stylesheet">
+
+<script src="static/js/general.js"></script>
+
+<script src="static/js/jquery.customInput.js"></script>
+
+<script type="text/javascript" src="static/js/jquery.powerful-placeholder.min.js"></script>
+<script>
+    jQuery(document).ready(function($) {
+        if($("[placeholder]").size() > 0) {
+            $.Placeholder.init();
+        }
+    });
+</script>
+<link rel="stylesheet" href="static/css/chosen.css">
+<script src="static/js/chosen.jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        jQuery('#contact-name').chosen({ width: "100%" });
+        jQuery('#commentForm .link-reset').click(function(){
+            jQuery("#contact-name").trigger("chosen:updated");
+        });
+
+    });
+</script>
+<script language="javascript">
+    $(document).ready(function() {
+        $('#contact-name').on("change", function(e) {
+            var slected = "";
+            $("#contact-name option:selected").each(function() {
+              selected = $(this).text();
+            });
+            if(selected == ""){
+                $('#inputs').fadeOut(500, function(){
+                    $('#inputs').html("");
+                });
+                return;
+            }
+            inner_html = "";
+            if(["Caesar", "Poly Alphabetic", "Full Vigenere", "Transposition", "Play Fair", "DES", "One Time Pad"].indexOf(selected) > -1) {
+                inner_html = '<div class="field_text lightPlaceholder"><label for="text" class="label_title">Text:</label><input type="text" name="text" id="text" value="" placeholder="ex. Take me to your leader" /></div><div class="field_text lightPlaceholder"><label for="key" class="label_title">Key:</label><input type="text" name="key" id="key" value="" placeholder="ex. Take me to your leader" /></div>';
+            } 
+            else if(selected == "Combination of Substitution and Transposition"){
+                inner_html = '<div class="field_text lightPlaceholder"><label for="text" class="label_title">Text:</label><input type="text" name="text" id="text" value="" placeholder="ex. Take me to your leader" /></div>';
+            } else if(selected == "AffineCipher"){
+                inner_html = '<div class="field_text lightPlaceholder"><label for="text" class="label_title">Text:</label><input type="text" name="text" id="text" value="" placeholder="ex. Take me to your leader" /></div><div class="field_text lightPlaceholder"><label for="key" class="label_title">Key:</label><input type="text" name="key" id="key" value="" placeholder="ex. Take me to your leader" /></div><div class="field_text lightPlaceholder"><label for="df" class="label_title">Decimal Factor:</label><input type="text" name="df" id="df" value="" placeholder="Enter any integer from 0 through 26" /></div>';
+            } else if(selected == "Hill Cipher"){
+                inner_html = '<div class="field_text lightPlaceholder"><label for="text" class="label_title">Text:</label><input type="text" name="text" id="text" value="" placeholder="ex. Take me to your leader" /></div><div class="field_text lightPlaceholder"><label for="key" class="label_title">Key:</label><input type="text" name="key" id="key" value="" placeholder="ex. Take me to your leader" /></div><div class="field_text lightPlaceholder"><label for="key_dimensions" class="label_title">Key Dimensions:</label><input type="text" name="key_dimensions" id="key_dimensions" value="" placeholder="2 or 3" /></div>';
+            }
+            else if(selected == "RSA"){
+                inner_html = '<div class="field_text lightPlaceholder"><label for="text" class="label_title">Text:</label><input type="text" name="text" id="text" value="" placeholder="ex. Take me to your leader" /></div><div class="field_text lightPlaceholder"><label for="p" class="label_title">P:</label><input type="text" name="p" id="p" value="" placeholder="Enter some odd number.." /></div><div class="field_text lightPlaceholder"><label for="q" class="label_title">Q:</label><input type="text" name="q" id="q" value="" placeholder="Enter some odd number.." /></div>';
+            }
+            $('#inputs').fadeOut(500, function(){
+                $('#inputs').html(inner_html);
+            }).fadeIn(500);
+            // $.post('task_getter.php', {id: curTabID, }, function(msg) {
+            //     if(msg == "No Tasks Were Added Yet!") 
+            //         $('#tasks').fadeOut(500, function(){
+            //             $('#tasks').html("No Tasks Were Added Yet!");
+            //         }).fadeIn(500);
+            //     else
+            //         $('#tasks').fadeOut(500, function(){
+            //             $('#tasks').html(msg);
+            //         }).fadeIn(500);
+            // });
+        });
+    });
+</script>
+
+</head>
+<body>
+<div class="body-wrap">
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1 col-sm-12">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="ribbon"><span>Information Engineering Project</span></div>
+                            <h2 class="foo2"></h2>
+
+                            <div class="add-comment styled boxed" id="addcomments">
+                                <div class="add-comment-title"><h3>Write a message</h3></div>
+                                <div class="comment-form">
+                                    {% if request.method == 'POST' %}
+                                       
+                                        {% if text %}
+                                            The {% if type=='enc' %} cipher {% else %} plain {% endif %} text is: {{ text }}
+                                        {% else %}
+                                            {{ error }}                                       
+                                        {% endif %}
+
+                                    {% else %}                                  
+                                    <form action="#" method="post" id="commentForm">
+                                        <div class="form-inner">
+                                            <div class="field_select">
+                                                <label for="contact-name" class="label_title">Algorithm:</label>
+                                                <select name="contact-name" id="contact-name" multiple data-placeholder="Select Name">
+                                                    <option value='Caesar'>Caesar</option>
+                                                    <option value='Transposition'>Transposition</option>
+                                                    <option value='Play_Fair'>Play Fair</option>
+                                                    <option value='Poly_Alphabetic'>Poly Alphabetic</option>
+                                                    <option value='Full_Vigenere'>Full Vigenere</option>
+                                                    <option value='Affine'>AffineCipher</option>
+                                                    <option value='Hill'>Hill Cipher</option>
+                                                    <option value='Sub_Trans'>Combination of Substitution and Transposition</option>
+                                                    <option value='One_Time_Pad'>One Time Pad</option>
+                                                    <option value='RSA'>RSA</option>
+                                                    <option value='DES'>DES</option>
+                                                </select>
+                                            </div>
+                                            <div id="inputs">
+                                            </div>
+                                            <div class="input_styled radiolist inline">
+                                                <div class="rowRadio"><div class="custom-radio"><input type="radio" name="type" value="enc" id="enc" checked="" hidefocus="true" style="outline: none;"><label for="enc" class="checked">Encryption</label></div></div>
+                                                <div class="rowRadio"><div class="custom-radio"><input type="radio" name="type" value="dec" id="dec" hidefocus="true" style="outline: none;"><label for="dec" class="">Decryption</label></div></div>
+                                            </div>
+                                        </div>
+                                        <div class="rowSubmit">
+                                            <a onclick="document.getElementById('commentForm').reset(); return false" href="#" class="link-reset btn btn-middle btn-gray"><span>Discard</span></a>
+                                            <span class="btn btn-send"><input type="submit" id="send" value="Go On!" /></span>
+                                        </div>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
